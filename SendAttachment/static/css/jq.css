@@ -1,0 +1,58 @@
+h1.title {
+  text-align: center;
+  margin-top: 10px;
+}
+.blurb {
+  background: #efecf4;
+  border: 1px dashed #e1e1e1;
+  border-radius: 4px;
+  color: #585260;
+  max-width: 100%;
+  padding: 5px;
+  padding-left: 10px;
+  margin-bottom: 25px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.blurb:empty {
+  padding: 0;
+  border: 0;
+}
+.blurb.selected-file {
+  max-height: 25px;
+  white-space: nowrap;
+}
+.row {
+  margin-bottom: 25px;
+}
+.row:nth-child(n+3) {
+  background: #f6f6f6;
+  padding: 10px;
+}
+.container {
+  width: 95%;
+}
+.top {
+  padding-right: 20px;
+}
+/* only apply to screens larger than mobile */
+@media (min-width: 550px) {
+  .container {
+    width: 85%;
+  }
+  .row:nth-child(n+3) {
+    padding: 20px 0 20px 0;
+  }
+}
+code {
+  border: 1px dashed #e1e1e1;
+}
+input,
+textarea,
+select,
+fieldset {
+  margin-bottom: inherit;
+}
+li {
+  margin-bottom: .3rem;
+}

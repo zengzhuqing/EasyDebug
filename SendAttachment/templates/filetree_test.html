@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+    <title>jquery Filetree test</title>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href="{{ url_for('filetree.static', filename='css/jQueryFileTree.min.css') }}" rel="stylesheet"></link>
+    <link href="{{ url_for('filetree.static', filename='css/jq.css') }}" rel="stylesheet"></link>
+    <script src="{{ url_for('filetree.static', filename='js/jQueryFileTree.min.js') }}"></script>
+    <style>
+    </style>
+    <script>
+        $(function() {
+            $("#filetree").fileTree({
+                root: "{{bug_dir}}",
+                script: "{{ url_for('filetree.sfiles') }}",
+      
+            }, function(file) { 
+            $("#selectedfilediv").show();
+            var res = file.split("/")
+            $("#selectedfile").text(res[res.length-1]);
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+
+    <div id="filetree">
+    </div>
+
+   <div id ="selectedfilediv"  style="display:none">
+    <div>
+      <p id="selectedfile" class="bg-info"></p> 
+   </div>
+
+    <div class="dropdown">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Sent to Log Insight
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+  
+        <li><a href="#">Send to vDiag</a></li>
+        <li><a href="#">Send to Cybertron</a></li>
+        <li><a href="#">Send to VMDT</a></li>
+      </ul>
+    </div>
+
+    <div>
+	  <button type="submit" class="btn btn-default" onclick="sendToLI()"> Submit</button>
+	</div>
+    </dev>
+    
+ 
+</body>
+</html>
