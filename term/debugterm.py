@@ -413,6 +413,7 @@ class Multiplex:
 				except OSError:
 					pass
 			cmd=['/bin/sh','-c',crash_cmd]
+			print cmd
 
 			env={}
 			env["COLUMNS"]=str(w)
@@ -494,11 +495,13 @@ class AchilTerm:
 	def __call__(self, environ, start_response):
 		req = webob.Request(environ)
 		res = webob.Response()
-		global task_id
-		if req.query_string != "" and req.query_string.split("=")[0] == "task":
-		       	task_id = req.query_string.split("=")[1]
+		global attachment
+		if req.query_string != "" and req.query_string.split("=")[0] == "file":
+			attachment = req.query_string.split("=")[1]
 
-		crash_cmd="retrace-server-interact " + task_id + " crash"
+		#crash_cmd="retrace-server-interact " + task_id + " crash"
+		#crash_cmd = "debugzilla.py /dbc/pa-dbc1108/gengshengl/work/vmxcrash/vmx-zdump.000"
+		crash_cmd = "echo Easy Debug Online;export USER=gengshengl;debugzilla.py " + attachment
 		print crash_cmd 
 
 		if req.environ['PATH_INFO'].endswith('/u'):
@@ -507,8 +510,8 @@ class AchilTerm:
 			c=req.params.get("c","")
 			#w=int(req.params.get("w", 0))
 			#h=int(req.params.get("h", 0))
-                        w=160
-                        h=60
+                        w=100
+                        h=40
 			if s in self.session:
 				term=self.session[s]
 			else:
@@ -547,7 +550,7 @@ def main():
 	parser = optparse.OptionParser()
 	parser.add_option("-p", "--port", dest="port", default="8022", help="Set the TCP port (default: 8022)")
 #	parser.add_option("-c", "--command", dest="cmd", default=None,help="set the command (default: /bin/login or ssh localhost)")
-	parser.add_option("-c", "--command", dest="cmd", default="retrace-server-interact 838844497 crash",help="set the command (default: /bin/login or ssh localhost)")
+	parser.add_option("-c", "--command", dest="cmd", default="debugzilla.py /dbc/pa-dbc1108/gengshengl/work/vmxcrash/vmx-zdump.000",help="hhahah")
 	parser.add_option("-l", "--log", action="store_true", dest="log",default=0,help="log requests to stderr (default: quiet mode)")
 	parser.add_option("-d", "--daemon", action="store_true", dest="daemon", default=0, help="run as daemon in the background")
 	parser.add_option("-P", "--pidfile",dest="pidfile",default="/var/run/achilterm.pid",help="set the pidfile (default: /var/run/achilterm.pid)")
