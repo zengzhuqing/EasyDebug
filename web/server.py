@@ -55,4 +55,4 @@ def ikb_search():
     return get_search_res("ikb", "kb", search_str)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
