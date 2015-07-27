@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="us">
+<head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel='stylesheet' type='text/css' href='static/css/dataTables.bootstrap.css'>
+    <link rel="stylesheet" type="text/css" href="static/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" href="static/css/dataTables.colVis.css">
+    <link rel="stylesheet" type="text/css" href="static/css/dataTables.tableTools.css">
+
+    <script type='text/javascript' src='static/js/jquery-1.8.3.min.js'></script>
+    <script type='text/javascript' src='static/js/jquery.dataTables.js'></script>
+    <script type='text/javascript' src='static/js/dataTables.bootstrap.js'></script>
+    <script type='text/javascript' src='static/js/dataTables.colVis.js'></script>
+    <script type='text/javascript' src='static/js/dataTables.fixedColumns.js'></script>
+    <script type="text/javascript" src="static/js/dataTables.tableTools.js"></script>
+</head>
+<body>
+
+<script>
+$(document).ready(function(){
+    var sprint_summary_table = $('.display').DataTable({
+        dom: 'lrtp',
+        //scrollY:        true,
+        //scrollX:        true,
+        paging:         false,
+        autoWidth:      false,
+        //"aoColumns": [
+        //    {"bVisible":true},
+        //]
+        "columnDefs": [
+            { "width": "20%", "targets": 0 }
+        ]
+    });
+
+    $('.lable_hidden_control').click(function() {
+        $('.hidden_table_class').slideToggle();
+    });
+
+});
+
+
+</script>
+
+
+{% set number_of_result = 0 %}
+{%for result in results%}
+{% set number_of_result = number_of_result+1 %}
+<h3><span class="label label-primary lable_hidden_control" id="label_{{number_of_result}}">
+    Matched Log Pattern: {{result[0]}}
+</span></h3>
+
+<div id='hidden_table_{{number_of_result}}' class='hidden_table_class'>
+<table id="Table" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Bugzilla ID</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+    {%if not result[1]==[]%}
+    {% for row in result[1] %}
+        <tr>
+            <td><a href=https://bugzilla.eng.vmware.com/show_bug.cgi?id={{row['bug_id']}} target="_blank">{{row['bug_id']}}</a></td>
+            <td>{{row['summary']}}</td>
+        </tr>
+    {% endfor %}
+    {%else%}
+        <td>N/A</td>
+        <td></td>
+    {%endif%}
+    </tbody>
+</table>
+
+<table id="Table" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>KB Id</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+    {%if not result[2]==[]%}
+    {% for row in result[2] %}
+        <tr>
+            <td><a href=https://ikb.vmware.com/kb/{{row['kb_id']}} target="_blank">{{row['kb_id']}}</a></td>
+            <td>{{row['summary']}}</td>
+        </tr>
+    {% endfor %}
+    {%else%}
+        <tr>
+            <td>N/A</td>
+        </tr>
+    {%endif%}
+    </tbody>
+</table>
+</div> <!--hidden table -->
+<hr>
+{%endfor%}
+
+</body>
+</html>
