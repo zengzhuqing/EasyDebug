@@ -21,7 +21,7 @@
                 loadMessage: "Loading the attachments..."
       
             }, function(file) { 
-            gfile = file;
+            gfile = file.replace("/mnt","/mts");
             $("#selectedfilediv").show();
             var res = file.split("/");
             console.log(file);
@@ -43,9 +43,9 @@
             bz = url.split("?id=")[1];
             console.log(bz);
             $.ajax({
-                url: 'http://127.0.0.1:5000/filetree/bugs?id=1452100',
-                type: 'GET',
-                data: 'ID=' + bz + '&FILE=' + gfile,
+                url: 'http://10.136.142.71:5001/api/v1.0/bundle',
+                type: 'POST',
+                data: 'BUGID=' + bz + '&FILE=' + gfile,
                 success: function() { alert('PUT completed'); }
 
              });
@@ -53,7 +53,6 @@
         
         if(action == "debugzilla") {
             var termurl = "http://pa-dbc1108.eng.vmware.com:8022/?file=" + gfile;
-            termurl = termurl.replace("/mnt", "/mts");
             window.open(termurl, "_blank");
 
         }
@@ -75,40 +74,51 @@
 <body>
 
   <div id="choose">
-  <div>
-    <label for="exampleInputName2">Select an attachment</label>
-  </div>
 
-  <div id="filetree">
-  </div>
+    <h2>Select The Attachment</h2>
+
+    <div class="row highlight">
+      <div class="col-md-5">
+        <pre>
+          <div id="filetree">
+          </div>
+        </pre>
+      </div> 
+    </div>
 
 
   <div id ="selectedfilediv"  style="display:none">
+    <h2>Debug The Attachment</h2>
+
+    <form class="form-inline">
     <div class="row">
-      <div class="input-group">
-        <div class="col-md-5">
-          <div class="input-group-addon">File</div>
+      <div class="form-group col-md-5">
+          <lablel for="selectedfile">File</label>
           <input id="selectedfile" type="text" class="form-control">
-        </div>
       </div>
     </div>
-    
+
 
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-2">
+          <lablel for="actionSelect">Action</label>
         <select class="form-control" id="actionSelect">
           <option value="loginsight">Sent to Log Insight</option>
+          <option value="debugzilla">Debugzilla Online</option>
           <option value="vdiag">Send to vDiag</option>
           <option value="cybertron">Send to Cybertron</option>
           <option value="vmdt">Send to VMDT</option>
-          <option value="debugzilla">Online Debug coredump</option>
         </select>
       </div>
-      <div class="col-md-2">
-	    <button type="submit" class="btn btn-default" onclick="SubmitFile()"> Submit</button>
+      <div class="col-md-1">
+	    <button type="submit" class="btn btn-default" onclick="SubmitFile()"> Debug</button>
 	  </div>
     </div>
-  </div>
+
+</div>
+</form>
+
+
   </div>  
 
   <div id="result" style="display:none">
@@ -119,6 +129,6 @@
     <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
     <button onclick="gotologinsight()" type="button" class="btn btn-primary">Go to Log Insight</button>
   </div>
-
+  
 </body>
 </html>
