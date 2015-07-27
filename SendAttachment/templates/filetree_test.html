@@ -13,49 +13,104 @@
     <style>
     </style>
     <script>
+        var gfile = "";
         $(function() {
             $("#filetree").fileTree({
                 root: "{{bug_dir}}",
                 script: "{{ url_for('filetree.sfiles') }}",
+                loadMessage: "Loading the attachments..."
       
             }, function(file) { 
+            gfile = file;
             $("#selectedfilediv").show();
-            var res = file.split("/")
-            $("#selectedfile").text(res[res.length-1]);
+            var res = file.split("/");
+            console.log(file);
+            var elem = document.getElementById("selectedfile");
+            elem.value = res[res.length-1];
             });
         });
 
+        function SubmitFile() {
+        //todo
+        var action = $( "#actionSelect" ).val();
+        console.log(action);
+        if(action == "loginsight") {
+
+        $("#result").show();
+        $("#choose").hide();
+
+            var url = document.URL;
+            bz = url.split("?id=")[1];
+            console.log(bz);
+            $.ajax({
+                url: 'http://127.0.0.1:5000/filetree/bugs?id=1452100',
+                type: 'GET',
+                data: 'ID=' + bz + '&FILE=' + gfile,
+                success: function() { alert('PUT completed'); }
+
+          });
+        }
+        }
+
+        function back() {
+        $("#result").hide();
+        $("#choose").show();
+        }
+
+        function gotologinsight() {
+           var liurl = "https://10.117.175.99/home?contextId=com.vmware.vsphere&viewId=1"
+           window.open(liurl, "_blank");
+        }
+        
     </script>
 </head>
 <body>
 
+  <div id="choose">
+  <div>
+    <label for="exampleInputName2">Select an attachment</label>
+  </div>
 
-    <div id="filetree">
+  <div id="filetree">
+  </div>
+
+
+  <div id ="selectedfilediv"  style="display:none">
+    <div class="row">
+      <div class="input-group">
+        <div class="col-md-5">
+          <div class="input-group-addon">File</div>
+          <input id="selectedfile" type="text" class="form-control">
+        </div>
+      </div>
     </div>
-
-   <div id ="selectedfilediv"  style="display:none">
-    <div>
-      <p id="selectedfile" class="bg-info"></p> 
-   </div>
-
-    <div class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Sent to Log Insight
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-  
-        <li><a href="#">Send to vDiag</a></li>
-        <li><a href="#">Send to Cybertron</a></li>
-        <li><a href="#">Send to VMDT</a></li>
-      </ul>
-    </div>
-
-    <div>
-	  <button type="submit" class="btn btn-default" onclick="sendToLI()"> Submit</button>
-	</div>
-    </dev>
     
- 
+
+    <div class="row">
+      <div class="col-md-4">
+        <select class="form-control" id="actionSelect">
+          <option value="loginsight">Sent to Log Insight</option>
+          <option value="vdiag">Send to vDiag</option>
+          <option value="cybertron">Send to Cybertron</option>
+          <option value="vmdt">Send to VMDT</option>
+          <option value="debugzilla">Online Debug coredump</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+	    <button type="submit" class="btn btn-default" onclick="SubmitFile()"> Submit</button>
+	  </div>
+    </div>
+  </div>
+  </div>  
+
+  <div id="result" style="display:none">
+    
+    <!-- Standard button -->
+    <button onclick="back()" type="button" class="btn btn-default">Back</button>
+
+    <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+    <button onclick="gotologinsight()" type="button" class="btn btn-primary">Go to Log Insight</button>
+  </div>
+
 </body>
 </html>
