@@ -71,6 +71,24 @@ function showMatchedString(matchInfo){
     //$("#log_regex").text(matchedRegex);
     var data = encodeURIComponent(JSON.stringify(matchedRegex)); 
     $("#tree").attr("src", "http://pek2-dbc201:5555/regexSearch?data=" + data);
+    /* 
+    $.ajax({
+        type:"GET",
+        url:"http://pek2-dbc201:5555/regexSearch",
+        data:"data="+data,
+        cache:false, //......
+        success:function(res){
+            if(res.res=="success"){
+                //document.getElementById("last_"+id).innerHTML = res.data;
+                //document.getElementById("hidden_last_"+id).innerHTML = res.data;
+                $('html').html(res.data);
+            }
+            else{
+                $('html').html("Error while processing data");
+            }
+        }
+    });
+    */
 }
 
 window.addEventListener('load', function(evt) {
