@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if(url.indexOf("bugzilla.eng.vmware.com/show_bug.cgi?id=") > -1) {
           var res = url.split("=");
           console.log(res[1]);
-          $("#tree").attr("src", "http://127.0.0.1:5000/filetree/bugs?id=" + res[1]);
+          $("#tree").attr("src", "http://10.136.142.71:5000/filetree/bugs?id=" + res[1]);
       } else {
           alert("Current page is not a valid bug page!");
       }
