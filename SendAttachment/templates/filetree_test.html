@@ -46,9 +46,12 @@
                 url: 'http://10.136.142.71:5001/api/v1.0/bundle',
                 type: 'POST',
                 data: 'BUGID=' + bz + '&FILE=' + gfile,
-                success: function() { alert('PUT completed'); }
+                success: function() { alert('PUT completed'); },
+                error: function() { alert('Failed post request');}
 
              });
+            console.log('hahaha')
+            
         }
         
         if(action == "debugzilla") {
