@@ -156,4 +156,4 @@ def test(**kwargs):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    test()
+    test(host='0.0.0.0')
