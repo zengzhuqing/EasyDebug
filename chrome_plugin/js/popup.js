@@ -34,7 +34,7 @@ function getCurrentTabUrl(callback) {
     // "url" properties.
     console.assert(typeof url == 'string', 'tab.url should be a string');
 
-    callback(url);
+    callback(url, tab);
   });
 
   // Most methods of the Chrome extension APIs are asynchronous. This means that
@@ -47,17 +47,45 @@ function getCurrentTabUrl(callback) {
   // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }
 
+function showMatchedString(matchInfo){
+    console.log(matchInfo);
+    regexArray = matchInfo.regexArray;
+    foundText = matchInfo.foundText;
+    var matchedRegex = []
+    $(regexArray).each(function(){
+        var patt = new RegExp(this);
+        var matched = false;
+        $(foundText).each(function (){
+            if (patt.test(this)){
+                console.log("matched");
+                console.log(this);
+                matched = true;
+                return false;
+            }
+        });
+        if (matched){
+            matchedRegex.push(this);
+        }
+    });
+    console.log(matchedRegex);
+    $("#log_regex").text(matchedRegex)
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-  getCurrentTabUrl(function(url) {
+window.addEventListener('load', function(evt) {
+  getCurrentTabUrl(function(url, tab) {
       if(url.indexOf("bugzilla.eng.vmware.com/show_bug.cgi?id=") > -1) {
           var res = url.split("=");
           console.log(res[1]);
           $("#tree").attr("src", "http://10.136.142.71:5000/filetree/bugs?id=" + res[1]);
       } else {
-          alert("Current page is not a valid bug page!");
+          var isLogInsight = chrome.extension.getBackgroundPage().isLogInsight();
+          if(isLogInsight){
+              console.log('log insight');
+              chrome.extension.getBackgroundPage().getPageInfo(showMatchedString, tab);
+          }
+          else{
+              alert("You are not viewing bugzilla page or log insight page");
+          }
       }
-
-
   });
 });
