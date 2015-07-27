@@ -68,7 +68,9 @@ function showMatchedString(matchInfo){
         }
     });
     console.log(matchedRegex);
-    $("#log_regex").text(matchedRegex)
+    //$("#log_regex").text(matchedRegex);
+    var data = encodeURIComponent(JSON.stringify(matchedRegex)); 
+    $("#tree").attr("src", "http://pek2-dbc201:5555/regexSearch?data=" + data);
 }
 
 window.addEventListener('load', function(evt) {
