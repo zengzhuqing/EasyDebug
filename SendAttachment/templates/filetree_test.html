@@ -13,49 +13,122 @@
     <style>
     </style>
     <script>
+        var gfile = "";
         $(function() {
             $("#filetree").fileTree({
                 root: "{{bug_dir}}",
                 script: "{{ url_for('filetree.sfiles') }}",
+                loadMessage: "Loading the attachments..."
       
             }, function(file) { 
+            gfile = file.replace("/mnt","/mts");
             $("#selectedfilediv").show();
-            var res = file.split("/")
-            $("#selectedfile").text(res[res.length-1]);
+            var res = file.split("/");
+            console.log(file);
+            var elem = document.getElementById("selectedfile");
+            elem.value = res[res.length-1];
             });
         });
 
+        function SubmitFile() {
+        //todo
+        var action = $( "#actionSelect" ).val();
+        console.log(action);
+        if(action == "loginsight") {
+
+            $("#result").show();
+            $("#choose").hide();
+
+            var url = document.URL;
+            bz = url.split("?id=")[1];
+            console.log(bz);
+            $.ajax({
+                url: 'http://10.136.142.71:5001/api/v1.0/bundle',
+                type: 'POST',
+                data: 'BUGID=' + bz + '&FILE=' + gfile,
+                success: function() { alert('PUT completed'); }
+
+             });
+        }
+        
+        if(action == "debugzilla") {
+            var termurl = "http://pa-dbc1108.eng.vmware.com:8022/?file=" + gfile;
+            window.open(termurl, "_blank");
+
+        }
+
+        }
+
+        function back() {
+        $("#result").hide();
+        $("#choose").show();
+        }
+
+        function gotologinsight() {
+           var liurl = "https://10.117.175.99/home?contextId=com.vmware.vsphere&viewId=1"
+           window.open(liurl, "_blank");
+        }
+        
     </script>
 </head>
 <body>
 
+  <div id="choose">
 
-    <div id="filetree">
+    <h2>Select The Attachment</h2>
+
+    <div class="row highlight">
+      <div class="col-md-5">
+        <pre>
+          <div id="filetree">
+          </div>
+        </pre>
+      </div> 
     </div>
 
-   <div id ="selectedfilediv"  style="display:none">
-    <div>
-      <p id="selectedfile" class="bg-info"></p> 
-   </div>
 
-    <div class="dropdown">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        Sent to Log Insight
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-  
-        <li><a href="#">Send to vDiag</a></li>
-        <li><a href="#">Send to Cybertron</a></li>
-        <li><a href="#">Send to VMDT</a></li>
-      </ul>
+  <div id ="selectedfilediv"  style="display:none">
+    <h2>Debug The Attachment</h2>
+
+    <form class="form-inline">
+    <div class="row">
+      <div class="form-group col-md-5">
+          <lablel for="selectedfile">File</label>
+          <input id="selectedfile" type="text" class="form-control">
+      </div>
     </div>
 
-    <div>
-	  <button type="submit" class="btn btn-default" onclick="sendToLI()"> Submit</button>
-	</div>
-    </dev>
+
+    <div class="row">
+      <div class="col-md-2">
+          <lablel for="actionSelect">Action</label>
+        <select class="form-control" id="actionSelect">
+          <option value="loginsight">Sent to Log Insight</option>
+          <option value="debugzilla">Debugzilla Online</option>
+          <option value="vdiag">Send to vDiag</option>
+          <option value="cybertron">Send to Cybertron</option>
+          <option value="vmdt">Send to VMDT</option>
+        </select>
+      </div>
+      <div class="col-md-1">
+	    <button type="submit" class="btn btn-default" onclick="SubmitFile()"> Debug</button>
+	  </div>
+    </div>
+
+</div>
+</form>
+
+
+  </div>  
+
+  <div id="result" style="display:none">
     
- 
+    <!-- Standard button -->
+    <button onclick="back()" type="button" class="btn btn-default">Back</button>
+
+    <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+    <button onclick="gotologinsight()" type="button" class="btn btn-primary">Go to Log Insight</button>
+  </div>
+  
 </body>
 </html>
