@@ -36,8 +36,8 @@
         console.log(action);
         if(action == "loginsight") {
 
-        $("#result").show();
-        $("#choose").hide();
+            $("#result").show();
+            $("#choose").hide();
 
             var url = document.URL;
             bz = url.split("?id=")[1];
@@ -48,8 +48,16 @@
                 data: 'ID=' + bz + '&FILE=' + gfile,
                 success: function() { alert('PUT completed'); }
 
-          });
+             });
         }
+        
+        if(action == "debugzilla") {
+            var termurl = "http://pa-dbc1108.eng.vmware.com:8022/?file=" + gfile;
+            termurl = termurl.replace("/mnt", "/mts");
+            window.open(termurl, "_blank");
+
+        }
+
         }
 
         function back() {
