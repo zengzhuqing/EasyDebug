@@ -1,9 +1,7 @@
 import os
 from flask import Flask, render_template, request, url_for, redirect, Response
 
-
 from flask.ext.restful import Api, Resource
-
 
 from datetime import timedelta
 from functools import update_wrapper
@@ -51,15 +49,12 @@ def crossdomain(origin=None, methods=None, headers=None,
 
         f.provide_automatic_options = False
         return update_wrapper(wrapped_function, f)
+
     return decorator
 
 
 app = Flask(__name__)
 api = Api(app)
-
-
-
-
 
 
 @app.route('/')
@@ -75,41 +70,44 @@ def index():
         bug_id = request.values['BUGID']
         file_name = request.values['FILE']
 
-	print bug_id
-	print file_name
-	
+        print bug_id
+        print file_name
+
         strs = file_name.rsplit('.', 1)
-        if strs[1] is "tgz":
+        if "tgz" in strs:
             new_folder = "/root/bundle_temp/" + strs[0]
-	    os.mkdir(new_folder)
-	    os.system("tar zxvf " + file_name + " -C " + new_folder )
-	    file_name = new_folder
-            
-        commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.117.175.99 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + \
+            print new_folder
+            os.system("rm -rf " + new_folder)
+            os.system("mkdir -p " + new_folder)
+            # os.mkdirs( new_folder )
+            os.system("tar zxvf " + file_name + " -C " + new_folder)
+            file_name = new_folder
+
+        commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.117.175.99 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + '/' + \
+                      os.listdir(file_name)[
+                          0] + \
                       " --manifest /build/apps/contrib/lib/loginsight-importer/esx_manifest.ini --honor_timestamp --tags " + \
-                      "\"{\"prid\":\"" + bug_id + "\"}\""
-	print commandline
+                      "\"{\\\"prid\\\":\\\"" + bug_id + "\\\"}\""
+        print commandline
 
         os.system(commandline)
-
 
         resp = Response("", status=200, mimetype='application/json')
 
         return resp
-    #     file = request.files['file']
-    #     if file and allowed_file(file.filename):
-    #         filename = secure_filename(file.filename)
-    #         tid = create_task_dir()
-    #         saved_file = 'upload/' + tid + '/' + filename
-    #         file.save(saved_file)
-    #         csv2jsonHC(saved_file)
-    #         # reportdirname = create_report_dir(tid)
-    #         # analyze_data(saved_file, 'report/' + tid + '/')
-    #         # add_new_task(tid)
-    #         return redirect(url_for('esxtop'))
-    # return render_template('index.html')
-
+        #     file = request.files['file']
+        #     if file and allowed_file(file.filename):
+        #         filename = secure_filename(file.filename)
+        #         tid = create_task_dir()
+        #         saved_file = 'upload/' + tid + '/' + filename
+        #         file.save(saved_file)
+        #         csv2jsonHC(saved_file)
+        #         # reportdirname = create_report_dir(tid)
+        #         # analyze_data(saved_file, 'report/' + tid + '/')
+        #         # add_new_task(tid)
+        #         return redirect(url_for('esxtop'))
+        # return render_template('index.html')
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5001)
+    app.run(host="0.0.0.0", port=5001)
