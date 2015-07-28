@@ -9,6 +9,8 @@ from flask import make_response, request, current_app, render_template
 from functools import update_wrapper
 import json
 
+from subprocess import * 
+
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
                 automatic_options=True):
@@ -52,33 +54,35 @@ def crossdomain(origin=None, methods=None, headers=None,
         return update_wrapper(wrapped_function, f)
     return decorator
 
-def getBzResult(string):
-    results = list()
-    result = dict()
-    result['bug_id'] = 23123
-    result['summary'] = '23123 summary'
-    results.append(result)
+def getBzResult(search_str):
+    ans_list =  get_search_res("bugzilla", "text", search_str)
+    for i in ans_list:
+        i['bug_id'] = i.pop('id')
+    return ans_list
 
-    result = dict()
-    result['bug_id'] = 99988
-    result['summary'] = '99988 summary'
-    results.append(result)
+def getIkbResult(search_str):
+    ans_list =  get_search_res("ikb", "kb", search_str)
+    for i in ans_list:
+        i['kb_id'] = i.pop('id')
+    return ans_list
 
-    return results
-
-def getIkbResult(string):
-    results = list()
-    result = dict()
-    result['kb_id'] = 23123
-    result['summary'] = '23123 kb summary'
-    results.append(result)
-
-    result = dict()
-    result['kb_id'] = 2003715
-    result['summary'] = '2003715 kb summary'
-    results.append(result)
-
-    return results
+def get_search_res(index, doc_type, query):
+    ans = {}
+    search_dsl = '{"query":{"regexp":{"text":\"%s\"}}}' %(query)
+    es_url = 'http://cybertron.eng.vmware.com:9200/%s/%s/_search?pretty=1' %(index, doc_type)
+    child = Popen(["curl", es_url, "-d", search_dsl], stdout=PIPE)  
+    json_res = child.communicate(None)[0]
+    jres = json.loads(json_res)
+    ans_list = []
+    for item in jres['hits']['hits']:
+        cur = {} 
+        cur['id'] = item['_id']
+        cur['summary'] = item['_source']['summary']
+        ans_list.append(cur)
+    return ans_list
+    response = make_response(json.dumps({'hits': ans_list}))
+    response.content_type = "application/json"
+    return response 
 
 @app.route("/regexSearch")
 @crossdomain(origin='*')
