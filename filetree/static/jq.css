@@ -66,3 +66,11 @@ li {
 	z-index: 9999;
 	background: url('images/page-loader.gif') 50% 50% no-repeat rgb(249,249,249);
 }
+
+
+.row-fluid{
+     white-space: nowrap;
+}
+.row-fluid .col-lg-3{
+     display: inline-block;
+}

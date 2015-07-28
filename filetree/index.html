@@ -4,12 +4,12 @@
 	<meta charset="utf-8">
     <title>jquery Filetree test</title>
 
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="static/bootstrap.min.css">
+    <script src="static/jquery.min.js"></script>
+    <script src="static/bootstrap.min.js"></script>
     <link href="static/jQueryFileTree.min.css" rel="stylesheet"></link>
     <link href="static/jq.css" rel="stylesheet"></link>
-    <script src="static/jQueryFileTree.min.js"></script>
+    <script src="static/jQueryFileTree.js"></script>
     <style>
     </style>
     <script>
@@ -25,25 +25,27 @@
               for(var i = 0; i < listpr.length; i ++) {
 		rootdir += listpr[i] + '/';
          	}
-	      console.log(rootdir);
-                     
               
 	    $('.jft').fileTree({
      		    root: rootdir,
 		    script: '/static/connectors/jqueryFileTree.php',
 		   // expandSpeed: 1000,
 		  //  collapseSpeed: 1000,
-		  //  multiSelect: true
-		 }, function(file) {
-		      gfile = "/mts/bugs" + file;
-                   $("#selectedfilediv").show();
-                  var res = file.split("/");
-                  console.log(file);
+		    //folderEvent: 'dblclick',
+		    multiFolder: false
+		 }).on('filetreeexpanded filetreecollapsed filetreeclicked', function(e, data) {
+	        $("#selectedfilediv").show();
+		var file =data.rel;
+   	        gfile = "/mts/bugs" + file;
+                if(file[file.length-1] == '/') {
+                    file = file.substring(0, file.length - 1);
+                }
+		var res = file.split("/");
             var elem = document.getElementById("selectedfile");
             elem.value = res[res.length-1];
-       
-		});
-	  };
+     		console.log(elem.value);
+	  });
+        }
 
         function SubmitFile() {
         //todo
@@ -106,7 +108,7 @@
 </head>
 <body>
 
-  <div class="row">
+  <div class="row" style="margin-right:0">
    <div id="choose" class="col-md-4 col-sm-6"> 
       <div class="panel panel-default">
          <div class="panel-heading"><a class="pull-right" onclick="refreshtree()"> Refresh</a> <h4>Select the bundle</h4></div>
