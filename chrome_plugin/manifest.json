@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
-  "description": "This extension shows a Google Image search result for the current page",
+  "name": "EasyDebug",
+  "description": "Sweet tool for linking LogInsight with KB&Bugzilla",
   "version": "1.0",
 
   "background": {
@@ -22,5 +22,10 @@
       "http://*/",
       "https://*/"
   ],
+  "icons" : {
+    "16" : "icon.png",
+    "48" : "icon.png",
+    "128" : "icon.png"
+  },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
