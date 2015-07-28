@@ -102,8 +102,6 @@ def regexSearch():
 
     return render_template('search_result.html', results = results)
 
-    return jsonify(res);
-
 @app.route("/DefaultError")
 @crossdomain(origin='*')
 def defaultError():

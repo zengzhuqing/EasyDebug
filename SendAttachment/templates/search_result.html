@@ -128,5 +128,11 @@ $(document).ready(function(){
 <hr>
 {%endfor%}
 
+{%if number_of_result == 0%}
+<h3><span class="label label-primary">
+    No matched Pattern
+</span></h3>
+{% endif %}
+
 </body>
 </html>
