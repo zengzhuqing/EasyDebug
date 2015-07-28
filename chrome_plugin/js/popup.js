@@ -96,7 +96,7 @@ window.addEventListener('load', function(evt) {
       if(url.indexOf("bugzilla.eng.vmware.com/show_bug.cgi?id=") > -1) {
           var res = url.split("?id=");
           console.log(res[1]);
-          num = res[1].split("#");
+          var num = res[1].split("#");
           $("#tree").attr("src", "http://10.136.142.71/index.html?id=" + num[0]);
       } else {
           var isLogInsight = chrome.extension.getBackgroundPage().isLogInsight();
