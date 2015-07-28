@@ -53,10 +53,10 @@ function showMatchedString(matchInfo){
     foundText = matchInfo.foundText;
     var matchedRegex = []
     $(regexArray).each(function(){
-        var patt = new RegExp(this);
+        var patt = new RegExp(this.toLowerCase());
         var matched = false;
         $(foundText).each(function (){
-            if (patt.test(this)){
+            if (patt.test(this.toLowerCase())){
                 console.log("matched");
                 console.log(this);
                 matched = true;
