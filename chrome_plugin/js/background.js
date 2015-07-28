@@ -12,23 +12,27 @@ function getDomainFromUrl(url){
 	return host;
 }
 
-var isLogInsightFlag = false;
-
 var gContentScriptData = {};
+var gIsLogInsightFlag = {};
 
 function checkForValidUrl(tabId, changeInfo, tab) {
     //only shows up when title is Log Insight
     gContentScriptData[tab.id] = null;
     if(tab.title.toLowerCase().indexOf("Interactive Analytics | vRealize Log Insight".toLowerCase()) >= 0){
         //chrome.browserAction.show(tabId);
-        isLogInsightFlag = true;
+        gIsLogInsightFlag[tab.id] = true;
     }
     else{
-        isLogInsightFlag = false;
+        gIsLogInsightFlag[tab.id] = false;
     }
 };
 
 function isLogInsight() {
+    var isLogInsightFlag = false;
+    var tab = chrome.tabs.query(
+        {currentWindow: true, active : true},
+        function(tabArray){});
+    isLogInsightFlag = gIsLogInsightFlag[tab[0].id];
     return isLogInsightFlag;
 }
 

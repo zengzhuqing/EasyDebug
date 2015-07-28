@@ -104,5 +104,10 @@ def regexSearch():
 
     return jsonify(res);
 
+@app.route("/DefaultError")
+@crossdomain(origin='*')
+def defaultError():
+    return "You are not in Bugzilla nor LogInsight";
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5555)
