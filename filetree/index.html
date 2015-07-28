@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+    <title>jquery Filetree test</title>
+
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href="static/jQueryFileTree.min.css" rel="stylesheet"></link>
+    <link href="static/jq.css" rel="stylesheet"></link>
+    <script src="static/jQueryFileTree.min.js"></script>
+    <style>
+    </style>
+    <script>
+        var gfile = "";
+	    $(document).ready(loadtree);
+
+            function loadtree() {
+	      var url = document.URL;
+              var pr = url.split("?id=")[1];
+              var listpr = pr.split("");
+              rootdir = "/files/0/";
+	
+              for(var i = 0; i < listpr.length; i ++) {
+		rootdir += listpr[i] + '/';
+         	}
+	      console.log(rootdir);
+                     
+              
+	    $('.jft').fileTree({
+     		    root: rootdir,
+		    script: '/static/connectors/jqueryFileTree.php',
+		   // expandSpeed: 1000,
+		  //  collapseSpeed: 1000,
+		  //  multiSelect: true
+		 }, function(file) {
+		      gfile = "/mts/bugs" + file;
+                   $("#selectedfilediv").show();
+                  var res = file.split("/");
+                  console.log(file);
+            var elem = document.getElementById("selectedfile");
+            elem.value = res[res.length-1];
+       
+		});
+	  };
+
+        function SubmitFile() {
+        //todo
+        var action = $( "#actionSelect" ).val();
+        console.log(action);
+ 	$("#filetree").removeClass('expanded').addClass('collapsed');
+        if(action == "loginsight") {
+
+            $("#result").show();
+            $("#choose").hide();
+
+            var url = document.URL;
+            bz = url.split("?id=")[1];
+            console.log(bz);
+            $.ajax({
+                url: 'http://10.136.142.71:5001/api/v1.0/bundle',
+                type: 'POST',
+                data: 'BUGID=' + bz + '&FILE=' + gfile,
+                success: function() { 
+                          var image = document.getElementById('myImage'); 
+		        $("#status").text("Bundle uploaded to Log Insight succesfully");
+                         image.src = "static/ok.png";},
+
+                error: function() { 
+	                var image = document.getElementById('myImage');
+		       $("#status").text("Failed to upload Bundle");
+                       image.src = "static/fail.png"; }
+
+
+             });
+            console.log('hahaha')
+            
+        }
+        
+        
+        if(action == "debugzilla") {
+            var termurl = "http://pa-dbc1108.eng.vmware.com:8022/?file=" + gfile;
+            window.open(termurl, "_blank");
+
+        }
+
+        }
+
+        function back() {
+	var image = document.getElementById('myImage');
+         image.src = "http://jimpunk.net/Loading/wp-content/uploads/loading2.gif";
+        $("#result").hide();
+        $("#choose").show();
+        }
+
+        function gotologinsight() {
+           var liurl = "https://10.117.175.99/home?contextId=com.vmware.vsphere&viewId=1"
+           window.open(liurl, "_blank");
+        }
+
+        function refreshtree() {
+	 loadtree();
+        }
+    </script>
+</head>
+<body>
+
+  <div class="row">
+   <div id="choose" class="col-md-4 col-sm-6"> 
+      <div class="panel panel-default">
+         <div class="panel-heading"><a class="pull-right" onclick="refreshtree()"> Refresh</a> <h4>Select the bundle</h4></div>
+           <div class="panel-body">
+              <div class="list-group">
+               <div class="jft" id="filetree">
+               </div>
+              </div>
+            </div>
+ 	</div>
+
+      <div id ="selectedfilediv"  style="display:none" class="panel panel-default">
+           <div class="panel-heading"><h4>Debug the bundle</h4></div>
+   		<div class="panel-body">
+              
+              
+              <div class="input-group">
+                <div class="input-group-btn">
+                <button class="btn btn-info">File</button>
+                </div>
+                <input  id="selectedfile" type="text" class="form-control" placeholder="Bundle">
+              </div>
+            <hr>
+               <div class="input-group">
+                <div class="input-group-btn">
+                <button class="btn btn-warning">Action</button>
+                </div>
+                <select class="form-control" id="actionSelect">
+           	   <option value="loginsight">Sent to Log Insight</option>
+                   <option value="debugzilla">Debugzilla Online</option>
+                   <option value="vdiag">Send to vDiag</option>
+                   <option value="cybertron">Send to Cybertron</option>
+                  <option value="vmdt">Send to VMDT</option>
+               </select>
+      
+              </div>
+            <hr>  
+	    <button class="btn btn-success pull-right btn-lg" onclick="SubmitFile()" type="button">Go!</button>
+            </div>
+         </div>
+     </div>
+
+  <div class="col-md-4 col-sm-6" id="result" style="display:none">
+      <div class="panel panel-default">
+         <div class="panel-heading"><h4 id="status" >Sumbitting to Log Insight...</h4></div>
+   	    <div class="panel-body">
+     	<div class="text-center">
+                 <img style="margin:auto" id="myImage"  src="http://jimpunk.net/Loading/wp-content/uploads/loading2.gif" width="256" height="256">
+                </div>
+                 <hr>
+   		<div class="text-center">
+                 <button onclick="back()" type="button" class="btn btn-default">Back to Previous</button>
+                 <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                 <button onclick="gotologinsight()" type="button" class="btn  btn-primary">Go to Log Insight</button>
+                </div>
+           </div>
+        </div>
+      </div> 
+   </div>
+</div>
+</body>
+</html>
