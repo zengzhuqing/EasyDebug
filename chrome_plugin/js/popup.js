@@ -91,6 +91,15 @@ function showMatchedString(matchInfo){
     */
 }
 
+function checkLogInsight(tab) {
+    if(tab.title.toLowerCase().indexOf("Interactive Analytics | vRealize Log Insight".toLowerCase()) >= 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
 window.addEventListener('load', function(evt) {
   getCurrentTabUrl(function(url, tab) {
       if(url.indexOf("bugzilla.eng.vmware.com/show_bug.cgi?id=") > -1) {
@@ -98,7 +107,7 @@ window.addEventListener('load', function(evt) {
           console.log(res[1]);
           $("#tree").attr("src", "http://10.136.142.71/index.html?id=" + res[1]);
       } else {
-          var isLogInsight = chrome.extension.getBackgroundPage().isLogInsight();
+          var isLogInsight = checkLogInsight(tab);
           if(isLogInsight){
               console.log('log insight');
               chrome.extension.getBackgroundPage().getPageInfo(showMatchedString, tab);
