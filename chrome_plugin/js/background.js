@@ -23,6 +23,9 @@ function checkForValidUrl(tabId, changeInfo, tab) {
         //chrome.browserAction.show(tabId);
         isLogInsightFlag = true;
     }
+    else{
+        isLogInsightFlag = false;
+    }
 };
 
 function isLogInsight() {

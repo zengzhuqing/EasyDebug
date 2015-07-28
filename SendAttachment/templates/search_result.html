@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="us">
 <head>
+    <meta charset="UTF-8">
+
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel='stylesheet' type='text/css' href='static/css/dataTables.bootstrap.css'>
     <link rel="stylesheet" type="text/css" href="static/css/jquery.dataTables.css">
@@ -32,10 +34,22 @@ $(document).ready(function(){
         ]
     });
 
-    $('.lable_hidden_control').click(function() {
-        $('.hidden_table_class').slideToggle();
-    });
 
+    if($('.lable_hidden_control')){
+        $('.lable_hidden_control').click(function() {
+            var all_id = this.id;
+            var index = all_id.substring('lable_'.length)
+            $('.hidden_table_class').each(function (){
+                var lable_index = this.id.substring('hidden_table_'.length)
+                if(lable_index != index){
+                    $(this).slideUp();
+                }
+            });
+            $('#hidden_table_'+index).slideToggle();
+        });
+        $('.hidden_table_class').slideUp();
+        //$('#hidden_table_1').slideDown();
+    }
 });
 
 
@@ -46,8 +60,9 @@ $(document).ready(function(){
 {%for result in results%}
 {% set number_of_result = number_of_result+1 %}
 <h3><span class="label label-primary lable_hidden_control" id="label_{{number_of_result}}">
-    Matched Log Pattern: {{result[0]}}
+    Matched Log Pattern:
 </span></h3>
+<h4>{{result[0]}}</h4>
 
 <div id='hidden_table_{{number_of_result}}' class='hidden_table_class'>
 <table id="Table" class="display" cellspacing="0" width="100%">
@@ -90,6 +105,7 @@ $(document).ready(function(){
     {%else%}
         <tr>
             <td>N/A</td>
+            <td></td>
         </tr>
     {%endif%}
     </tbody>
