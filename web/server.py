@@ -31,6 +31,7 @@ def get_search_res(index, doc_type, query):
     ans = {}
     search_dsl = '{"query":{"regexp":{"text":\"%s\"}}}' %(query)
     es_url = 'http://cybertron.eng.vmware.com:9200/%s/%s/_search?pretty=1' %(index, doc_type)
+    search_dsl = search_dsl.replace("\\","\\\\")
     child = Popen(["curl", es_url, "-d", search_dsl], stdout=PIPE)  
     json_res = child.communicate(None)[0]
     jres = json.loads(json_res)
