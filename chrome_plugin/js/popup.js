@@ -70,7 +70,7 @@ function showMatchedString(matchInfo){
     console.log(matchedRegex);
     //$("#log_regex").text(matchedRegex);
     var data = encodeURIComponent(JSON.stringify(matchedRegex)); 
-    $("#tree").attr("src", "http://pek2-dbc201:5555/regexSearch?data=" + data);
+    $("#tree").attr("src", "http://pek2-dbc201.eng.vmware.com:5555/regexSearch?data=" + data);
     /* 
     $.ajax({
         type:"GET",
@@ -100,6 +100,10 @@ function checkLogInsight(tab) {
     }
 }
 
+function showStop() {
+    $("#tree").attr("src", "http://pek2-dbc201.eng.vmware.com:5555/DefaultError");
+}
+
 window.addEventListener('load', function(evt) {
   getCurrentTabUrl(function(url, tab) {
       if(url.indexOf("bugzilla.eng.vmware.com/show_bug.cgi?id=") > -1) {
@@ -114,7 +118,7 @@ window.addEventListener('load', function(evt) {
               chrome.extension.getBackgroundPage().getPageInfo(showMatchedString, tab);
           }
           else{
-              $("#tree").attr("src", "http://pek2-dbc201:5555/DefaultError");
+              showStop();
           }
       }
   });

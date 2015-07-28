@@ -128,11 +128,12 @@ $(document).ready(function(){
 <hr>
 {%endfor%}
 
-{%if results == []%}
+{%if number_of_result == 0%}
 <h3><span class="label label-primary">
-    No Pattern Matched
+    Not Bugzilla/LogInsight Page
 </span></h3>
 <hr>
+<img src='static/img/stop.png' />
 {% endif %}
 
 </body>
