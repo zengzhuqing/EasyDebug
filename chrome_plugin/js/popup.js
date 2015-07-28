@@ -101,7 +101,7 @@ function checkLogInsight(tab) {
 }
 
 function showStop() {
-    $("#tree").attr("src", "http://pek2-dbc201.eng.vmware.com:5555/DefaultError");
+    $("#tree").attr("src", "http://10.136.142.71/fail.html");
 }
 
 window.addEventListener('load', function(evt) {
