@@ -114,7 +114,7 @@ window.addEventListener('load', function(evt) {
               chrome.extension.getBackgroundPage().getPageInfo(showMatchedString, tab);
           }
           else{
-              alert("You are not viewing bugzilla page or log insight page");
+              $("#tree").attr("src", "http://pek2-dbc201:5555/DefaultError");
           }
       }
   });
