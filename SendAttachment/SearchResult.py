@@ -58,6 +58,7 @@ def getBzResult(search_str):
     ans_list =  get_search_res("bugzilla", "text", search_str)
     for i in ans_list:
         i['bug_id'] = i.pop('id')
+    #raise Exception('xyz')
     return ans_list
 
 def getIkbResult(search_str):
@@ -68,7 +69,7 @@ def getIkbResult(search_str):
 
 def get_search_res(index, doc_type, query):
     ans = {}
-    search_dsl = '{"query":{"regexp":{"text":\"%s\"}}}' %(query)
+    search_dsl = '{"query":{"regexp":{"text":\".*%s.*\"}}}' %(query)
     es_url = 'http://cybertron.eng.vmware.com:9200/%s/%s/_search?pretty=1' %(index, doc_type)
     child = Popen(["curl", es_url, "-d", str(search_dsl).encode('string-escape')], stdout=PIPE)  
     json_res = child.communicate(None)[0]
@@ -76,13 +77,13 @@ def get_search_res(index, doc_type, query):
     ans_list = []
     for item in jres['hits']['hits']:
         cur = {} 
-        cur['id'] = item['_id']
+        cur['id'] = int(item['_id'])
         cur['summary'] = item['_source']['summary']
         ans_list.append(cur)
-    return ans_list
-    response = make_response(json.dumps({'hits': ans_list}))
-    response.content_type = "application/json"
-    return response 
+    #sorted to get the latest item
+    newlist = list(reversed(sorted(ans_list, key=lambda k: k['id'])))
+    
+    return newlist
 
 @app.route("/regexSearch")
 @crossdomain(origin='*')
