@@ -77,13 +77,13 @@ def get_search_res(index, doc_type, query):
     ans_list = []
     for item in jres['hits']['hits']:
         cur = {} 
-        cur['id'] = int(item['_id'])
+        cur['id'] = item['_id']
         cur['summary'] = item['_source']['summary']
         ans_list.append(cur)
     #sorted to get the latest item
-    newlist = list(reversed(sorted(ans_list, key=lambda k: k['id'])))
+    #newlist = list(reversed(sorted(ans_list, key=lambda k: k['id'])))
     
-    return newlist
+    return ans_list
 
 @app.route("/regexSearch")
 @crossdomain(origin='*')
