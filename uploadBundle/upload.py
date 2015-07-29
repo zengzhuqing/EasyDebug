@@ -6,6 +6,7 @@ from flask.ext.restful import Api, Resource
 from datetime import timedelta
 from functools import update_wrapper
 from flask import make_response, request, current_app
+import tarfile
 
 
 def crossdomain(origin=None, methods=None, headers=None,
@@ -63,38 +64,59 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/api/v1.0/bundle', methods=['POST'])
+@app.route('/api/v1.0/bundle', methods=['GET', 'POST'] )
 @crossdomain(origin='*')
 def index():
     if request.method == 'POST':
+	print request.values
+      
         bug_id = request.values['BUGID']
-        file_name = request.values['FIFE']
+	print bug_id
+        file_name = request.values['FILE']
+	print file_name
         action = request.values['ACTION']
-        print bug_id
-        print file_name
-        split_filename = file_name.rsplit('.', 1)
-        if "tgz" in split_filename:
-            if action == 'extract':
-                basepath = os.path.dirname(file_name)
+        print action
 
-                print "tar zxvf " + file_name + ' -C ' + basepath
-                print basepath + '/' + 'reconstruct.sh'
-                os.system("tar zxvf " + file_name + ' -C ' + basepath)
-                os.system(basepath + '/' + 'reconstruct.sh')
+        split_filename = file_name.rsplit('.', 1)
+
+        if "tgz" in split_filename or file_name[-1] == "/" : 
+            if action == 'extract':
+		print "bbbbbbbbbbbbbbbbbbbbbba"
+		fn = file_name.decode('unicode-escape')
+                basepath = os.path.dirname(file_name)
+                print "tar zxvf " + fn + ' -C ' + basepath
+		tar = tarfile.open(fn, "r:gz")
+		extracted = tar.next().name.split("/")[0]
+		print extracted
+		s = fn.rsplit("/")[-1];
+		print s
+		fn = fn.replace(s, "")
+		print fn
+	#	ls = tar.list()
+		
+		print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                os.system("umask 000;tar zxvf " + file_name + ' -C ' + basepath)
+                os.system("cd " + fn + extracted + '/' + '; ./reconstruct.sh')
+                print "cd " + fn + extracted + '/' + '; ./reconstruct.sh'
 
             elif action == 'loginsight':
-                new_folder = "/root/bundle_temp/" + split_filename[0]
-                print new_folder
-                os.system("rm -rf " + new_folder)
-                os.system("mkdir -p " + new_folder)
-                # os.mkdirs( new_folder )
-                os.system("tar zxvf " + file_name + " -C " + new_folder)
-                file_name = new_folder + '/' + os.listdir(new_folder)[0]
+		if file_name[-1] == "/" :
+			print file_name + " is a fffffffffffffffolder"
+			pass
+		else :
+			print file_name + " is a llllllllllllllllle"
+	                new_folder = "/root/bundle_temp/" + split_filename[0]
+       		        print new_folder
+                	os.system("rm -rf " + new_folder)
+                	os.system("mkdir -p " + new_folder)
+                	# os.mkdirs( new_folder )
+                	os.system("tar zxvf " + file_name + " -C " + new_folder)
+                	file_name = new_folder + '/' + os.listdir(new_folder)[0]
 
                 os.system("gzip -d " + file_name + '/var/run/log/vmkernel.*.gz')
                 os.system("gzip -d " + file_name + '/var/run/log/hostd.*.gz')
 
-                commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.136.144.87 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + \
+                commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.24.62.162 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + \
                               " --manifest /root/easydebug_manifest.ini --honor_timestamp --tags " + \
                               "\"{\\\"prid\\\":\\\"" + bug_id + "\\\"}\""
                 print commandline
@@ -122,4 +144,8 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5001)
+     	app.debug = True
+    	app.run(host="0.0.0.0", port=5001)
+
+
+

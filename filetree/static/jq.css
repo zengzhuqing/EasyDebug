@@ -74,3 +74,16 @@ li {
 .row-fluid .col-lg-3{
      display: inline-block;
 }
+
+
+
+
+.scrolling { /* Note #2 */
+    position: fixed;
+    top: 0;
+}
+
+.bold-option{font-weight: bolder;}
+
+.optfont
+{ font-size:18px; }

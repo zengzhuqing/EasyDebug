@@ -25,7 +25,7 @@ if( !array_key_exists('HTTP_REFERER', $_SERVER) ) exit('No direct script access 
  * -> prevents debug users from exploring system's directory structure
  * ex: $root = $_SERVER['DOCUMENT_ROOT'];
  */
-$root = "/mnt/bugs";
+$root = "/mts/bugs";
 //$root = $_SERVER['DOCUMENT_ROOT'];
 if( !$root ) exit("ERROR: Root filesystem directory not set in jqueryFileTree.php");
 
