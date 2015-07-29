@@ -85,26 +85,26 @@
 
 
              });
-            console.log('hahaha');
+            console.log('hahaha')
             
         } 
-	
-	if(action == "cybertron") {
+	else if(action == "cybertron") {
+            console.log('Acybertron')
+	    console.log(gfile)
             $("#result").show();
             $("#choose").hide();
 
-	    $("#status").text("Uploading to Linux CoreDump Analyzer...");
             var url = document.URL;
             bz = url.split("?id=")[1];
             console.log(bz);
             $.ajax({
-                url: "http://cybertron.eng.vmware.com/Create_BG",
+                url: "http://cybertron.eng.vmware.com/Create_BG,
                 type: "POST",
                 data: "custom_url=" + gfile,
                 success: function(data) { 
 			console.log(data);
                           var image = document.getElementById('myImage'); 
-		       $("#status").text("Bundle uploaded to Log Insight succesfully");
+		        $("#status").text("Bundle uploaded to Log Insight succesfully");
                          image.src = "static/ok.png";
                         },
 
@@ -122,8 +122,8 @@
 
 
              });
-            console.log('Acybertron');
         } 
+        
         
         if(action == "debugzilla") {
             var termurl = "http://pa-dbc1108.eng.vmware.com:8022/?file=" + gfile;
