@@ -37,6 +37,8 @@ $(document).ready(function(){
         //scrollX:        true,
         paging:         false,
         autoWidth:      false,
+        bSort:          true,
+        "order":        [[ 0, 'desc' ]],
         //"aoColumns": [
         //    {"bVisible":true},
         //]
@@ -66,6 +68,12 @@ $(document).ready(function(){
 
 </script>
 
+<style>
+.place {
+    display: none;
+}
+</style>
+
 
 <hr>
 {% set number_of_result = 0 %}
@@ -82,7 +90,10 @@ $(document).ready(function(){
 <table id="Table" class="display" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <th><img src='static/img/bz.png' />Bugzilla</th>
+            <th colspan="2"><img src='static/img/bz.png' /> Bugzilla</th>
+        </tr>
+        <tr class='place'>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -90,7 +101,7 @@ $(document).ready(function(){
     {%if not result[1]==[]%}
     {% for row in result[1] %}
         <tr>
-            <td><a href=https://bugzilla.eng.vmware.com/show_bug.cgi?id={{row['bug_id']}} target="_blank">{{row['bug_id']}}</a></td>
+            <td width="20%"><a href=https://bugzilla.eng.vmware.com/show_bug.cgi?id={{row['bug_id']}} target="_blank">{{row['bug_id']}}</a></td>
             <td>{{row['summary']}}</td>
         </tr>
     {% endfor %}
@@ -104,7 +115,10 @@ $(document).ready(function(){
 <table id="Table" class="display" cellspacing="0" width="100%">
     <thead>
         <tr>
-            <th><img src='static/img/ikb.png' height="22" width="22"/>   KB</th>
+            <th colspan="2"><img src='static/img/ikb.png' height="22" width="22"/>   KB</th>
+        </tr>
+        <tr class='place'>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -112,7 +126,7 @@ $(document).ready(function(){
     {%if not result[2]==[]%}
     {% for row in result[2] %}
         <tr>
-            <td><a href=https://ikb.vmware.com/kb/{{row['kb_id']}} target="_blank">{{row['kb_id']}}</a></td>
+            <td><a href=https://ikb.vmware.com/contactcenter/php/search.do?cmd=displayKC&docType=kc&externalId={{row['kb_id']}} target="_blank">{{row['kb_id']}}</a></td>
             <td>{{row['summary']}}</td>
         </tr>
     {% endfor %}

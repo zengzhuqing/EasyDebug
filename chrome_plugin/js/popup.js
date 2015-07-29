@@ -53,10 +53,10 @@ function showMatchedString(matchInfo){
     foundText = matchInfo.foundText;
     var matchedRegex = []
     $(regexArray).each(function(){
-        var patt = new RegExp(this);
+        var patt = new RegExp(this.toLowerCase());
         var matched = false;
         $(foundText).each(function (){
-            if (patt.test(this)){
+            if (patt.test(this.toLowerCase())){
                 console.log("matched");
                 console.log(this);
                 matched = true;
@@ -70,7 +70,7 @@ function showMatchedString(matchInfo){
     console.log(matchedRegex);
     //$("#log_regex").text(matchedRegex);
     var data = encodeURIComponent(JSON.stringify(matchedRegex)); 
-    $("#tree").attr("src", "http://pek2-dbc201.eng.vmware.com:5555/regexSearch?data=" + data);
+    $("#tree").attr("src", "http://10.24.61.36:5555/regexSearch?data=" + data);
     /* 
     $.ajax({
         type:"GET",
