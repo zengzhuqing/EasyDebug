@@ -68,29 +68,41 @@ def hello_world():
 def index():
     if request.method == 'POST':
         bug_id = request.values['BUGID']
-        file_name = request.values['FILE']
-
+        file_name = request.values['FIFE']
+        action = request.values['ACTION']
         print bug_id
         print file_name
+        split_filename = file_name.rsplit('.', 1)
+        if "tgz" in split_filename:
+            if action == 'extract':
+                basepath = os.path.dirname(file_name)
 
-        strs = file_name.rsplit('.', 1)
-        if "tgz" in strs:
-            new_folder = "/root/bundle_temp/" + strs[0]
-            print new_folder
-            os.system("rm -rf " + new_folder)
-            os.system("mkdir -p " + new_folder)
-            # os.mkdirs( new_folder )
-            os.system("tar zxvf " + file_name + " -C " + new_folder)
-            file_name = new_folder
+                print "tar zxvf " + file_name + ' -C ' + basepath
+                print basepath + '/' + 'reconstruct.sh'
+                os.system("tar zxvf " + file_name + ' -C ' + basepath)
+                os.system(basepath + '/' + 'reconstruct.sh')
 
-        commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.117.175.99 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + '/' + \
-                      os.listdir(file_name)[
-                          0] + \
-                      " --manifest /build/apps/contrib/lib/loginsight-importer/esx_manifest.ini --honor_timestamp --tags " + \
-                      "\"{\\\"prid\\\":\\\"" + bug_id + "\\\"}\""
-        print commandline
+            elif action == 'loginsight':
+                new_folder = "/root/bundle_temp/" + split_filename[0]
+                print new_folder
+                os.system("rm -rf " + new_folder)
+                os.system("mkdir -p " + new_folder)
+                # os.mkdirs( new_folder )
+                os.system("tar zxvf " + file_name + " -C " + new_folder)
+                file_name = new_folder + '/' + os.listdir(new_folder)[0]
 
-        os.system(commandline)
+                os.system("gzip -d " + file_name + '/var/run/log/vmkernel.*.gz')
+                os.system("gzip -d " + file_name + '/var/run/log/hostd.*.gz')
+
+                commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.136.144.87 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + \
+                              " --manifest /root/easydebug_manifest.ini --honor_timestamp --tags " + \
+                              "\"{\\\"prid\\\":\\\"" + bug_id + "\\\"}\""
+                print commandline
+
+                os.system(commandline)
+        else:
+            resp = Response("", status=500, mimetype='application/json')
+
 
         resp = Response("", status=200, mimetype='application/json')
 
