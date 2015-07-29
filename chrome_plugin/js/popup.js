@@ -70,7 +70,7 @@ function showMatchedString(matchInfo){
     console.log(matchedRegex);
     //$("#log_regex").text(matchedRegex);
     var data = encodeURIComponent(JSON.stringify(matchedRegex)); 
-    $("#tree").attr("src", "http://pek2-dbc201.eng.vmware.com:5555/regexSearch?data=" + data);
+    $("#tree").attr("src", "http://10.24.61.36:5555/regexSearch?data=" + data);
     /* 
     $.ajax({
         type:"GET",
