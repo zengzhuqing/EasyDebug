@@ -34,7 +34,16 @@ function onClickHandler(info, tab) {
             active: true
         }, function(tab) {
     });
+  } if(info.menuItemId == "ogselection"){
+    var key = info.selectionText;
+    var search_url = "https://opengrok.eng.vmware.com/source/search?q=" + key + "&project=vsphere60ep1.perforce.1666&defs=&refs=&path=&hist="
+    chrome.tabs.create({
+            url: search_url,
+            active: true
+        }, function(tab) {
+    });
   }
+
 };
 
 chrome.contextMenus.onClicked.addListener(onClickHandler);
@@ -42,7 +51,7 @@ chrome.contextMenus.onClicked.addListener(onClickHandler);
 // Set up context menu tree at install time.
 chrome.runtime.onInstalled.addListener(function() {
   // Create one test item for each context type.
-  var contexts = ["page","selection","link","editable","image","video",
+  var contexts = ["page","selection","editable","image","video",
                   "audio"];
   for (var i = 0; i < contexts.length; i++) {
     var context = contexts[i];
@@ -52,6 +61,12 @@ chrome.runtime.onInstalled.addListener(function() {
     var ikb_title = "search " + context + " in ikb";
     var ikb_id = chrome.contextMenus.create({"title": ikb_title, "contexts":[context],
                                          "id": "ikb" + context});
+
+    var og_title = "search " + context + " in opengrok";
+
+    var og_id = chrome.contextMenus.create({"title": og_title, "contexts":[context],
+                                         "id": "og" + context});
+
     console.log("'" + context + "' item:" + id);
   }
 
