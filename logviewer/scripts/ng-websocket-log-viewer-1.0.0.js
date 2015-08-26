@@ -15,7 +15,7 @@ angular.module("ng-websocket-log-viewer", [])
 
             lineCount: 'websocket-log-viewer-line-count',
             reload: 'websocket-log-viewer-reload',
-            onlyShow: 'websocket-log-viewer-only-show-sources'
+            loadmore: 'websocket-log-viewer-loadmore'
         },
         events: {
             connected: 'websocket-log-viewer-connected',
@@ -87,23 +87,22 @@ angular.module("ng-websocket-log-viewer", [])
 
         me.filter = function (param) {
 
-            $scope.loglines = [];
-            for( var i = 0; i < $scope.logdata.length; i++) {
-                if($scope.logdata[i].match(param['expression'])) {
-
-                    showMessage($scope.logdata[i], i + 1);
+           // $scope.loglines = [];
+            for( var i = 0; i < $scope.loglines.length; i++) {
+                if($scope.loglines[i]['Line'].match(param['expression'])) {
+                    $scope.loglines[i]['show'] = true;
+                    //showMessage($scope.logdata[i], i + 1);
+                } else {
+                    $scope.loglines[i]['show'] = false;
                 }
-
             }
-
         };
-
         return me;
     };
 }])
 
 .controller('websocketLogViewerController', ['$anchorScroll', '$location','$scope','$http', 'websocketLogConstants', 'websocketLogEntryFormatterFactory', 'websocketLogConnectionManagerFactory',
-    function ($anchorScroll, $location, $scope, $http, websocketLogConstants, websocketLogEntryFormatterFactory, websocketLogConnectionManagerFactory) {
+    function ( $anchorScroll, $location, $scope, $http, websocketLogConstants, websocketLogEntryFormatterFactory, websocketLogConnectionManagerFactory) {
 
     $scope.loglines = [];
     $scope.width;
@@ -126,7 +125,8 @@ angular.module("ng-websocket-log-viewer", [])
         pushEntryIntoScope({
             Timestamp: lastTimespan,
             Line: line,
-            NO: i
+            NO: i,
+            show:true
         });
     };
 
@@ -153,36 +153,63 @@ angular.module("ng-websocket-log-viewer", [])
             maxLines = count;
     });
 
-    $scope.$on(websocketLogConstants.commands.reloadlog, function (event) {
-        console.log('reloadlog!!!!');
+    $scope.$on(websocketLogConstants.commands.reloadlog, function (event, args) {
+        console.log(args);
         $scope.logdata = [];
         $scope.loglines = [];
         $scope.documents = [];
-        $http.get('http://127.0.0.1:8181/vmware-3.log')
+      //  console.log($routeParams);
+        $http.get(args['url'])
             .then(function(result) {
+                //console.log(result.data);
+                console.log("donwload finish");
+                $scope.logdata = result.data.split('\n');
+                console.log("split finish");
 
-                $scope.logdata = $scope.logdata.concat(result.data.toString().split('\n'));
-                var i;
-                for(i = 0; i < $scope.logdata.length; i ++) {
-                    showMessage($scope.logdata[i], i+1);
-                }
-                //caculate the width of line number
+                var i = $scope.logdata.length;
                 var w = 0;
                 while(i != 0) {
                     i = Math.floor(i / 10);
                     w = w + 10;
                 }
                 $scope.width =  w + "px";
+
+
+
+                for(i = 0; i < 4000; i ++) {
+                    showMessage($scope.logdata[i], i+1);
+                }
+                console.log("all finished");
+                //caculate the width of line number
+
             });
     });
 
+    $scope.$on(websocketLogConstants.commands.loadmore, function () {
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds){
+                    break;
+                }
+            }
+        }
 
 
-    $scope.$on(websocketLogConstants.commands.onlyShow, function (event, args) {
-        // todo
+        console.log("load more!!!!");
+        var i;
+        console.log($scope.logdata.length);
+        for(i = 4000; i < $scope.logdata.length; i ++) {
+            console.log(i);
+            showMessage($scope.logdata[i], i+1);
+            if( i % 2000 ==0 ) {
+                sleep(1000)
+            }
+
+        }
+
     });
-
-
 
 }])
 
@@ -191,8 +218,8 @@ angular.module("ng-websocket-log-viewer", [])
         restrict: 'E',
         replace: true,
     //    template: '<div class="log-viewer"><div class="log-viewer-entry" ng-repeat="logline in loglines"><span class="log-viewer-server-color" ng-style="{ backgroundColor: logline.color}"></span><span ng-bind-html="logline.HtmlLine"></span></div></div>',
-        template: '<div class="log-viewer"><div class="log-viewer-entry" ng-repeat="logline in loglines">' +
-        '<span class="anchor linenumber" style="width: {{width}}" id="anchor + {{logline.NO}}">{{logline.NO + "&nbsp;&nbsp;"}}</span>' +
+        template: '<div  class="log-viewer"><div class="log-viewer-entry" ng-repeat="logline in loglines" ng-show="logline.show">' +
+        '<span class="anchor linenumber" style="width: {{width}}" id="anchor{{logline.NO}}">{{logline.NO + "&nbsp;&nbsp;"}}</span>' +
         '<span ng-bind-html="logline.HtmlLine"></span></div></div>',
         controller: 'websocketLogViewerController'
     };

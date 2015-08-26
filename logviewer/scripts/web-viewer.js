@@ -1,6 +1,7 @@
 ﻿angular.module("nglog-websockeet-demo", ['ng-websocket-log-viewer'])
 
-.controller("logController", ['$anchorScroll', '$location', '$scope', 'websocketLogConstants', function ($anchorScroll, $location, $scope, websocketLogConstants) {
+.controller("logController", ['$anchorScroll', '$location', '$scope', 'websocketLogConstants',
+        function ($anchorScroll, $location, $scope, websocketLogConstants) {
 
 
 
@@ -28,8 +29,26 @@
     };
 
     $scope.reloadlog = function () {
-        $scope.$broadcast(websocketLogConstants.commands.reloadlog);
+        var fileurl;
+        function getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
 
+        fileurl = "http://127.0.0.1:8181/" + getQueryVariable("file");
+        console.log(fileurl);
+        $scope.$broadcast(websocketLogConstants.commands.reloadlog, {url : fileurl} );
+
+    };
+
+    $scope.loadmore = function () {
+         $scope.$broadcast(websocketLogConstants.commands.loadmore);
     };
 
     $scope.$on(websocketLogConstants.events.highlighted, function (event, args) {
