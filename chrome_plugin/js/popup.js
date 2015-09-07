@@ -101,7 +101,7 @@ function checkLogInsight(tab) {
 }
 
 function showStop() {
-    $("#tree").attr("src", "http://10.24.61.36/fail.html");
+    $("#tree").attr("src", "http://easydebug/fail.html");
 }
 
 window.addEventListener('load', function(evt) {
@@ -110,7 +110,7 @@ window.addEventListener('load', function(evt) {
           var res = url.split("?id=");
           console.log(res[1]);
           var num = res[1].split("#");
-          $("#tree").attr("src", "http://10.24.61.36/index.html?id=" + num[0]);
+          $("#tree").attr("src", "http://easydebug.eng.vmware.com/index.html?id=" + num[0]);
       } else {
           var isLogInsight = checkLogInsight(tab);
           if(isLogInsight){
