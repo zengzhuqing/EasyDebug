@@ -1,0 +1,23 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Easy Debug Upload</title>
+  </head>
+  <body>
+    <form action="upload" method="post" enctype="multipart/form-data"> 
+      <p>Upload attachments</p>
+      <input  name="file" type="file"></input>
+      <button type="submit">Upload</button>
+    </form>
+    <form action="file_import" method="post"> 
+      <p>Import example</p>
+      <input  name="file"></input>
+      <button type="submit">Import</button>
+    </form>
+  </body>
+</html>
