@@ -10,7 +10,7 @@
 
     <div id="header">
         <button ng-click="reloadlog()" ng-class="{blink : pause}">Reload</button>
-        <button ng-click="loadmore()" ng-class="{blink : pause}">loadmore</button>
+<!--        <button ng-click="loadmore()" ng-class="{blink : pause}">loadmore</button> -->
         <label>BackGround</label><input type="color" ng-model="background" />
         <label>Font Color</label><input type="color" ng-model="fontcolor" />
         <label>grep Log</label><input id="regex" expand-on-focus="200" type="text" ng-model="filterExpression" ng-model-options="{ debounce: 500 }" ng-change="filter(filterExpression)" />
