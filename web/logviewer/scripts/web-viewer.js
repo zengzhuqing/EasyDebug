@@ -41,7 +41,7 @@
             return(false);
         }
 
-        fileurl = "http://127.0.0.1:8181/" + getQueryVariable("file");
+        fileurl = "http://easydebug.eng.vmware.com" + getQueryVariable("file");
         console.log(fileurl);
         $scope.$broadcast(websocketLogConstants.commands.reloadlog, {url : fileurl} );
 

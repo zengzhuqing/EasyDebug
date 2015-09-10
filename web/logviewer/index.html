@@ -9,7 +9,7 @@
 <body ng-app="nglog-websockeet-demo" ng-controller="logController">
 
     <div id="header">
-        <button ng-click="reloadlog()" ng-class="{blink : pause}">Reload</button>
+        <button ng-click="reloadlog()" id="reload" ng-class="{blink : pause}">Reload</button>
 <!--        <button ng-click="loadmore()" ng-class="{blink : pause}">loadmore</button> -->
         <label>BackGround</label><input type="color" ng-model="background" />
         <label>Font Color</label><input type="color" ng-model="fontcolor" />
@@ -25,5 +25,11 @@
     <script src="scripts/angular.min.js"></script>
     <script src="scripts/ng-websocket-log-viewer-1.0.0.js"></script>
     <script src="scripts/web-viewer.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <script>
+$(document).ready(function() {
+   $("#reload").trigger('click');
+});
+    </script>
 </body>
 </html>
