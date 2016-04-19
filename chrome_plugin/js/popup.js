@@ -70,11 +70,11 @@ function showMatchedString(matchInfo){
     console.log(matchedRegex);
     //$("#log_regex").text(matchedRegex);
     var data = encodeURIComponent(JSON.stringify(matchedRegex)); 
-    $("#tree").attr("src", "http://pek2-dbc201.eng.vmware.com:5555/regexSearch?data=" + data);
+    $("#tree").attr("src", "http://vmcore-cloud.eng.vmware.com:5555/regexSearch?data=" + data);
     /* 
     $.ajax({
         type:"GET",
-        url:"http://pek2-dbc201:5555/regexSearch",
+        url:"http://vmcore-cloud:5555/regexSearch",
         data:"data="+data,
         cache:false, //......
         success:function(res){

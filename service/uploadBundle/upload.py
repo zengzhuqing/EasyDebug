@@ -116,7 +116,7 @@ def index():
                 os.system("gzip -d " + file_name + '/var/run/log/vmkernel.*.gz')
                 os.system("gzip -d " + file_name + '/var/run/log/hostd.*.gz')
 
-                commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.24.62.162 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + \
+                commandline = "/build/apps/contrib/bin/loginsight-importer --server 10.160.236.181 --logdir /tmp --username admin --password 'VMca$hc0w' --source " + file_name + \
                               " --manifest /root/easydebug_manifest.ini --honor_timestamp --tags " + \
                               "\"{\\\"prid\\\":\\\"" + bug_id + "\\\"}\""
                 print commandline
